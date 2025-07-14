@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parser Marktplaats</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2 class="title">Parsing settings</h2>
+
+        <label class="form-label">Keyword:</label>
+        <input type="text" id="keyword" class="form-input" value="iphone 11">
+
+        <label class="form-label">Minimum price:</label>
+        <input type="number" step="0.01" id="min_price" class="form-input" value="100">
+
+        <label class="form-label">Maximum price:</label>
+        <input type="number" step="0.01" id="max_price" class="form-input" value="200">
+
+        <label class="form-label">Exclude words (comma-separated):</label>
+        <input type="text" id="exclude_keywords" class="form-input" placeholder="broken,defect,screen broken">
+
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="saveConfig()">Save settings</button>
+            <button class="btn btn-success" onclick="toggleParser(true)">Start</button>
+            <button class="btn btn-danger" onclick="toggleParser(false)">Stop</button>
+        </div>
+
+        <div class="status-box">
+            <p class="status-text">Parser status: <span id="parserStatus" class="status-indicator">Stopped</span></p>
+            <p class="status-text">Last run time: <span id="lastRun">-</span></p>
+            <a href="{{ url_for('results') }}" class="status-link" target="_blank">all announcements</a>
+            <a href="{{ url_for('chat_ids_admin') }}" class="status-link" target="_blank">Add user id </a>
+        </div>
+
+        <h3 class="subtitle">New products:</h3>
+        <ul id="newProductsList" class="products-list"></ul>
+
+        <script>
+            function saveConfig() {
+                let config = {
+                    keyword: $("#keyword").val(),
+                    min_price: $("#min_price").val(),
+                    max_price: $("#max_price").val(),
+                    exclude_keywords: $("#exclude_keywords").val()
+                };
+                $.post("/update_config", config);
+            }
+
+            function toggleParser(start) {
+                $.post("/toggle_parser", { action: start ? "start" : "stop" }, function(res) {
+                    $("#parserStatus").text(res.status ? "Started" : "Stopped");
+                    if (res.status) {
+                        $("#parserStatus").addClass("running");
+                    } else {
+                        $("#parserStatus").removeClass("running");
+                    }
+                });
+            }
+
+            // Periodic request for new data
+            setInterval(() => {
+                $.get("/get_new_products", function(new_products) {
+                    $("#newProductsList").empty();
+                    new_products.forEach(p => {
+                        $("#newProductsList").append(`
+                            <li class="product-item">
+                                <a href="${p.link}" target="_blank" class="product-link">${p.title} — ${p.price}</a>
+                                <p class="product-description">${p.full_description}</p>
+                            </li>
+                        `);
+                    });
+                });
+
+                $.get("/results_info", function(res) {
+                    $("#lastRun").text(res.last_run || "-");
+                });
+            }, 5000);
+        </script>
+    </div>
+</body>
+</html>

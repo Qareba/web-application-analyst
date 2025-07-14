@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parser Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .status-running {
+            border-left: 4px solid #28a745;
+        }
+        .status-stopped {
+            border-left: 4px solid #dc3545;
+        }
+        .log-container {
+            background: #000;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            height: 400px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn-start {
+            background: #28a745;
+            color: white;
+        }
+        .btn-stop {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-refresh {
+            background: #007bff;
+            color: white;
+        }
+        .config-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .config-form input, .config-form select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .config-form label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Parser Debug Panel</h1>
+        
+        <div class="status-card" id="status-card">
+            <h3>📊 Parser Status</h3>
+            <div id="status-info">Loading...</div>
+        </div>
+
+        <div class="status-card">
+            <h3>🎛️ Controls</h3>
+            <button class="btn btn-start" onclick="startParser()">▶️ Start Parser</button>
+            <button class="btn btn-stop" onclick="stopParser()">⏹️ Stop Parser</button>
+            <button class="btn btn-refresh" onclick="refreshStatus()">🔄 Refresh</button>
+        </div>
+
+        <div class="status-card">
+            <h3>⚙️ Configuration</h3>
+            <form class="config-form" id="config-form">
+                <div>
+                    <label for="keyword">Keyword:</label>
+                    <input type="text" id="keyword" name="keyword" value="iphone 11">
+                </div>
+                <div>
+                    <label for="min_price">Min Price:</label>
+                    <input type="number" id="min_price" name="min_price" value="100">
+                </div>
+                <div>
+                    <label for="max_price">Max Price:</label>
+                    <input type="number" id="max_price" name="max_price" value="200">
+                </div>
+                <div>
+                    <label for="exclude_keywords">Exclude Keywords:</label>
+                    <input type="text" id="exclude_keywords" name="exclude_keywords" value="broken,defect">
+                </div>
+                <div>
+                    <label for="interval">Interval (seconds):</label>
+                    <input type="number" id="interval" name="interval" value="300">
+                </div>
+                <div>
+                    <button type="button" class="btn btn-refresh" onclick="updateConfig()">💾 Update Config</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="status-card">
+            <h3>📋 New Products</h3>
+            <div id="new-products">Loading...</div>
+        </div>
+
+        <div class="status-card">
+            <h3>📝 Live Logs</h3>
+            <div class="log-container" id="log-container">
+                <div>Waiting for logs...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function refreshStatus() {
+            fetch('/parser_status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusCard = document.getElementById('status-card');
+                    const statusInfo = document.getElementById('status-info');
+                    
+                    statusCard.className = 'status-card ' + (data.running ? 'status-running' : 'status-stopped');
+                    
+                    statusInfo.innerHTML = `
+                        <p><strong>Status:</strong> ${data.running ? '🟢 Running' : '🔴 Stopped'}</p>
+                        <p><strong>Last Run:</strong> ${data.last_run || 'Never'}</p>
+                        <p><strong>Keyword:</strong> ${data.keyword}</p>
+                        <p><strong>Price Range:</strong> €${data.min_price} - €${data.max_price}</p>
+                        <p><strong>Interval:</strong> ${data.interval} seconds</p>
+                        <p><strong>New Products:</strong> ${data.new_products_count}</p>
+                    `;
+
+                    // Update config form
+                    document.getElementById('keyword').value = data.keyword;
+                    document.getElementById('min_price').value = data.min_price;
+                    document.getElementById('max_price').value = data.max_price;
+                    document.getElementById('exclude_keywords').value = data.exclude_keywords.join(',');
+                    document.getElementById('interval').value = data.interval;
+
+                    // Update new products
+                    const newProductsDiv = document.getElementById('new-products');
+                    if (data.new_products.length === 0) {
+                        newProductsDiv.innerHTML = '<p>No new products found</p>';
+                    } else {
+                        newProductsDiv.innerHTML = data.new_products.map(product => `
+                            <div style="border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 4px;">
+                                <strong>${product.title}</strong><br>
+                                <span style="color: #28a745;">${product.price}</span><br>
+                                <small>${product.full_description.substring(0, 100)}...</small><br>
+                                <a href="${product.link}" target="_blank">View Product</a>
+                            </div>
+                        `).join('');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('status-info').innerHTML = '<p style="color: red;">Error loading status</p>';
+                });
+        }
+
+        function startParser() {
+            fetch('/toggle_parser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=start'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Parser started:', data);
+                refreshStatus();
+            })
+            .catch(error => {
+                console.error('Error starting parser:', error);
+            });
+        }
+
+        function stopParser() {
+            fetch('/toggle_parser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=stop'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Parser stopped:', data);
+                refreshStatus();
+            })
+            .catch(error => {
+                console.error('Error stopping parser:', error);
+            });
+        }
+
+        function updateConfig() {
+            const formData = new FormData(document.getElementById('config-form'));
+            const data = new URLSearchParams();
+            
+            for (let [key, value] of formData.entries()) {
+                data.append(key, value);
+            }
+
+            fetch('/update_config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: data.toString()
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Config updated:', data);
+                refreshStatus();
+            })
+            .catch(error => {
+                console.error('Error updating config:', error);
+            });
+        }
+
+        // Auto-refresh every 5 seconds
+        setInterval(refreshStatus, 5000);
+        
+        // Initial load
+        refreshStatus();
+    </script>
+</body>
+</html> 

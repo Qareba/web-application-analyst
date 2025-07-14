@@ -1,0 +1,413 @@
+body {
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.title {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 10px;
+}
+
+.subtitle {
+    color: #555;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+    font-size: 14px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.button-group {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.btn {
+    padding: 12px 25px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.status-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 4px solid #667eea;
+}
+
+.status-text {
+    margin: 8px 0;
+    color: #555;
+}
+
+.status-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.status-link:hover {
+    text-decoration: underline;
+}
+
+.products-list {
+    list-style: none;
+    padding: 0;
+}
+
+.product-item {
+    background: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+    transition: all 0.3s ease;
+}
+
+.product-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.product-link {
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.product-link:hover {
+    color: #667eea;
+}
+
+.product-description {
+    margin: 8px 0 0 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.status-indicator {
+    font-weight: bold;
+    color: #dc3545;
+}
+
+.status-indicator.running {
+    color: #28a745;
+}
+
+/* --- Chat IDs Management Styles --- */
+.chatids-container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.10);
+    padding: 32px 28px 28px 28px;
+}
+
+.chatids-title {
+    color: #667eea;
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+#chatIdsForm textarea {
+    width: 100%;
+    min-height: 90px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 15px;
+    font-family: inherit;
+    margin-bottom: 18px;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    resize: vertical;
+}
+
+#chatIdsForm textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.10);
+}
+
+#chatIdsForm button[type="submit"] {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
+}
+
+#chatIdsForm button[type="submit"]:hover {
+    background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+}
+
+#response p {
+    margin-top: 18px;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 500;
+}
+
+#response p[style*='green'] {
+    color: #28a745 !important;
+}
+
+#response p[style*='red'] {
+    color: #dc3545 !important;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 9px 22px;
+    background: linear-gradient(90deg, #e0e7ff 0%, #d1c4e9 100%);
+    color: #667eea;
+    border: none;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 1px 6px rgba(102, 126, 234, 0.07);
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+    letter-spacing: 0.5px;
+}
+
+.back-link:hover {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(102, 126, 234, 0.13);
+    text-decoration: none;
+}
+
+/* Планшеты */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    
+    .container {
+        margin: 10px;
+        padding: 25px;
+        border-radius: 12px;
+    }
+    
+    .title {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+    
+    .btn {
+        display: inline-block;
+        width: auto;
+        margin: 5px;
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+    
+    .button-group {
+        text-align: center;
+    }
+}
+
+/* Мобильные телефоны */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        margin: 5px;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    
+    .title {
+        font-size: 20px;
+        margin-bottom: 20px;
+        padding-bottom: 8px;
+    }
+    
+    .subtitle {
+        font-size: 16px;
+        margin-top: 25px;
+    }
+    
+    .form-label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+    
+    .form-input {
+        padding: 10px;
+        font-size: 16px; /* Предотвращает зум на iOS */
+        margin-bottom: 15px;
+    }
+    
+    .btn {
+        display: block;
+        width: 100%;
+        margin: 8px 0;
+        padding: 12px 15px;
+        font-size: 14px;
+        text-transform: none;
+        letter-spacing: normal;
+    }
+    
+    .button-group {
+        margin: 20px 0;
+    }
+    
+    .status-box {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .status-text {
+        font-size: 13px;
+        margin: 6px 0;
+    }
+    
+    .product-item {
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .product-description {
+        font-size: 12px;
+        line-height: 1.3;
+    }
+}
+
+/* Очень маленькие экраны */
+@media (max-width: 320px) {
+    body {
+        padding: 5px;
+    }
+    
+    .container {
+        margin: 2px;
+        padding: 15px;
+    }
+    
+    .title {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .form-input {
+        padding: 8px;
+        font-size: 16px;
+    }
+    
+    .btn {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .status-box {
+        padding: 12px;
+    }
+    
+    .product-item {
+        padding: 10px;
+    }
+}
+
+/* Ландшафтная ориентация на мобильных */
+@media (max-width: 768px) and (orientation: landscape) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 20px;
+    }
+    
+    .btn {
+        display: inline-block;
+        width: auto;
+        margin: 5px;
+    }
+    
+    .button-group {
+        text-align: center;
+    }
+}
+

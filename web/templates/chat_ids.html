@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat IDs Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+    <div class="chatids-container">
+        <a href="/" class="back-link">Back</a>
+        <h1 class="chatids-title">Allowed Chat IDs</h1>
+
+        <form id="chatIdsForm">
+            <textarea name="chat_ids" rows="5" placeholder="Enter chat IDs separated by commas">{{ allowed_chat_ids }}</textarea>
+            <br>
+            <button type="submit">Save</button>
+        </form>
+
+        <div id="response"></div>
+    </div>
+
+    <script>
+        document.getElementById("chatIdsForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const chatIds = formData.get("chat_ids");
+
+            const response = await fetch("/admin/chat_ids/update", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "chat_ids=" + encodeURIComponent(chatIds)
+            });
+
+            const result = await response.json();
+            const resDiv = document.getElementById("response");
+            if (result.status === "ok") {
+                resDiv.innerHTML = "<p style='color:green;'>✅ Chat IDs успешно обновлены.</p>";
+            } else {
+                resDiv.innerHTML = "<p style='color:red;'>❌ Ошибка при обновлении.</p>";
+            }
+        });
+    </script>
+</body>
+</html>

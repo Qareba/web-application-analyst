@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Status parsing</title>
+    <meta http-equiv="refresh" content="5">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/status.css') }}">
+</head>
+<body>
+    <h2>Status parsing</h2>
+    <p>Status: {{ result.status }}</p>
+    <p>Items found: {{ result.count }}</p>
+    <ul>
+        {% for link in result.links_parsed %}
+            <li>{{ link }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('show_results') }}">View results</a>
+</body>
+</html>
